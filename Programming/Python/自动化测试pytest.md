@@ -1,4 +1,7 @@
-
+默认是不打印 logger 或print的日志，可以用下面的方法来打印
+```shell
+python -m pytest -s --capture=no --log-cli-level=INFO test_all.py
+```
 ## Pytest 命名规范
 
 * 类名必须Test开头
@@ -191,6 +194,41 @@ class TestAll:
         monkeypatch.setenv("TEST_ENV", "1")
 
 ```
+
+#### 测试函数参数
+在 pytest 中，测试函数都是以 test_ 开头的，如果测试函数要传入参数，这个参数往往是一个 fixture (可以是 pytest 自带的 fixture，如 tmp_path，也可以是自定义的fixture)。
+
+比如我们需要创建一个测试文件，并向这个文件里写点东西，那么我们可以用 tmp_path 这个python自带的fixture，它会自动创建这个文件，并在测试完成后删除。由于是自带的fixture，所以 test_bucket_ecr_mapping 函数可以直接使用这个作为参数
+
+```python
+def test_bucket_ecr_mapping(tmp_path):
+    mapping_file = tmp_path / "mapping.json"
+    mapping_file.write_text('{"bucket1": "ecr1"}')
+    with patch('lambda_function.open', create=True) as mock_open:
+        mock_open.return_value.__enter__.return_value.read.return_value = '{"bucket1": "ecr1"}'
+        result = bucket_ecr_mapping()
+        assert result == {"bucket1": "ecr1"}
+```
+
+但如果我们传入的是一个自定义的值，那么就需要把这个变成一个fixture。示例我们把 tmp_path 改成 temp_path，则就需要把 temp_path 变成 fixture.
+```python
+@pytest.fixture
+def temp_path(tmp_path):
+    return tmp_path
+
+def test_bucket_ecr_mapping(temp_path):
+
+    mapping_file = tmp_path / "mapping.json"
+    mapping_file.write_text('{"bucket1": "ecr1"}')
+    with patch('lambda_function.open', create=True) as mock_open:
+        mock_open.return_value.__enter__.return_value.read.return_value = '{"bucket1": "ecr1"}'
+        result = bucket_ecr_mapping()
+        assert result == {"bucket1": "ecr1"}
+```
+
+在上面的示例中，注意看 `patch('lambda_function.open', create=True) ` 这一部分，虽然 open() 函数是python builtin的，在 lambda_function里并没有直接定义，且 lambda_function里的子函数才会用到，可是在做 from lambda_function import ... 或者 import_funciton 的时候，整个顶层代码都会被执行，所有的函数和类都会被定义，所以即使子函数里用了 open()，也会生效。create=True这个参数，是因为 patch 的 open 并不是模块的属性，所以要允许 mock 创建一个不存在的属性
+
+ 
 #### 使用 mock 方法来patch 函数返回值
 pytest 可以和 unittest 结合使用，比如当我们在 lambda_function.py 文件里，有一个 get_string_data 的函数，这个函数需要访问外部数据，但我们每次测试的时候，不想让这个接口访问外部数据，那么就可以用 mock的 patch方法，来模拟返回值。在模拟的时候，可以用with上下文管理器结合yield方法，也可以直接用装饰器。两种用法都是可以的
 ```python
@@ -310,10 +348,7 @@ if __name__ == '__main__':
 
 在 debug python代码的时候，程序会卡在断点的那一样的位置，那一行的代码处于未被执行的状态。pycharm 对查看断点有几个按钮:
 
-step over: 直接执行这一行的代码
-
-step into：进入到这一行代码内部看具体执行过程
-
-Step into my code：跳过系统包和第三方包，只看自己的代码的执行过程。由IDE判断哪些包是第三方。
-
-step out：在 step into 的过程中，将 step into的剩余部分一次性执行完。step into + step out 相当于 step over
+* step over: 直接执行这一行的代码
+* step into：进入到这一行代码内部看具体执行过程
+* Step into my code：跳过系统包和第三方包，只看自己的代码的执行过程。由IDE判断哪些包是第三方。
+* step out：在 step into 的过程中，将 step into的剩余部分一次性执行完。step into + step out 相当于 step over

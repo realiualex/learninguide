@@ -1,3 +1,22 @@
+## 项目环境管理
+现在推荐使用 uv 来管理项目环境，虽然也可以使用 virtualenv，venv，pyenv，但是uv是新一代项目环境管理软件，越来越普及
+
+```
+# 创建虚拟环境，虚拟环境目录为 .venv
+uv venv
+# 默认上面的命令创建出来的虚拟环境名字就是当前文件夹名字，如果名字太长，可以用下面的方法创建，则名字为.venv
+uv venv .venv
+
+# 激活虚拟环境
+source .venv/bin/activate   # macOS / Linux
+.\.venv\Scripts\activate    # Windows
+
+# 添加软件
+uv add requests
+uv pip list
+uv pip compile pyproject.toml > requirements.txt
+
+```
 ## 类型提示
 
 Pydantic 的 BaseModel，是比 dataclass 更强大的功能，BaseModel里如果定义了字段为 int，那么即使使用的时候为 string，也会转成 int。所以如果项目能用 BaseModel的话，最好用这个。除非是不太方便安装第三方库，就只能用自带的 dataclass了。
