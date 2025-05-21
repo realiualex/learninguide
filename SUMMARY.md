@@ -94,7 +94,7 @@
     * [Python的坑](./Programming/Python/python的坑.md)
     * [ Python配置文件管理](./Programming/Python/Python配置文件管理.md)
     * [HTTP Stream Response](./Programming/Python/HTTP_Stream_Response.md)
-    * [Python项目](./Programming/Python/Python项目.md)
+    * [Python项目管理](Python项目管理.md)
     * 
   * 设计模式
     * [设计模式](./Programming/设计模式/设计模式.md)

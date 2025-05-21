@@ -352,3 +352,119 @@ if __name__ == '__main__':
 * step into：进入到这一行代码内部看具体执行过程
 * Step into my code：跳过系统包和第三方包，只看自己的代码的执行过程。由IDE判断哪些包是第三方。
 * step out：在 step into 的过程中，将 step into的剩余部分一次性执行完。step into + step out 相当于 step over
+
+
+## Appendix
+### 示例一：读文件
+比如有一个main.py文件，
+```python
+
+def demo():
+    try:
+        with open("README.md", "r") as f:
+            content = f.read()
+    except FileNotFoundError as e:
+        raise FileNotFoundError
+    except:
+        raise
+    return content
+
+def demo2():
+    try:
+        f = open("README.md", "r")
+        content = f.read()
+        f.close()
+    except FileNotFoundError as e:
+        raise FileNotFoundError
+    except:
+        raise
+    return content
+```
+
+此时有一个 test_all.py 文件。注意上述 main.py里，主要区别的地方在于 一个使用了 with 上下文管理器，一个没有使用。这个我们在 mock open 这个方法的时候，就要根据如何使用来决定要mock的方法是什么。
+
+```python
+import pytest
+from unittest.mock import patch, MagicMock
+from main import demo,demo2
+
+
+def test_demo():
+    with patch('main.open', create=True) as mock_open:
+        mock_open.return_value.__enter__.return_value.read.return_value = "Test"
+        result = demo()
+        assert result == "Test"
+        mock_open.assert_called_once_with("README.md", "r")
+        
+    with patch('main.open', side_effect=FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
+            demo()
+    with patch('main.open', side_effect=Exception("other error")):
+        with pytest.raises(Exception):
+            demo()
+
+
+def test_demo2():
+    with patch('main.open', create=True) as mock_open:
+        mock_open.return_value.read.return_value = "Test"
+        mock_open.return_value.close.return_value = MagicMock()
+        result = demo2()
+        assert result == "Test"
+        mock_open.assert_called_once_with("README.md", "r")
+        mock_open.return_value.close.assert_called_once()
+        
+    with patch('main.open', side_effect=FileNotFoundError):
+        with pytest.raises(FileNotFoundError):
+            demo2()
+    with patch('main.open', side_effect=Exception("other error")):
+        with pytest.raises(Exception):
+            demo2()
+
+
+```
+
+### 示例二: 使用 moto 来mock AWS的资源
+假设我们要mock AWS Secrets Manager 的get secret value 这个动作，那么我们用 moto 要先调用 AWS的API创建出来这个资源，之后才能mock 使用这个资源。
+示例
+```python
+import boto3
+def get_secret_value(secret_id):
+    secretsmanager = boto3.client("secretsmanager")
+    result = secretsmanager.get_secret_value(SecretId=secret_id)
+    secret_string = result["SecretString"]
+    return secret_string
+
+```
+
+那么我们的pytest 应该这样写
+```python
+
+import boto3
+from moto import mock_aws
+from main import get_secret_value
+
+
+@pytest.fixture
+def aws_credential():
+    import os
+    os.environ['AWS_ACCESS_KEY_ID'] = "testing"
+    os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+    os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+    os.environ['AWS_SESSION_TOKEN'] = 'testing'
+
+@pytest.fixture
+def mock_secretsmanager(aws_credential):
+    with mock_aws():
+        yield boto3.client("secretsmanager", region_name="ap-northeast-1")
+
+@mock_aws
+def test_get_secret_value(mock_secretsmanager):
+    secret_id = "test-secret"
+    secret_value = "test-value"
+    mock_secretsmanager.create_secret(Name=secret_id, SecretString=secret_value)
+    value = get_secret_value(secret_id)
+    assert value == secret_value
+
+```
+
+同样，如果想要 mock AWS S3 的API，比如GetObject，那需要先用 moto 创建一个S3 bucket，在在这个mock的bucket里，调用PutObject API给放一些内容，之后在需要测试的函数里，正常调这个moto创建的资源。
