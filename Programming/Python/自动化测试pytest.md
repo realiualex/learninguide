@@ -467,4 +467,62 @@ def test_get_secret_value(mock_secretsmanager):
 
 ```
 
+有关moto，其实在最新版本里，mock_aws 会自动替换所有的 boto3 的请求，所以不用再像以前那样对每一个资源都做fixture了。示例 (注意，我们一般把s3这类资源放到了外部，这样能够复用)
+```python
+s3 = boto3.client("s3")
+def create_s3_bucket(bucket_name, s3_client = None):
+    s3 = s3_client or boto3.client('s3')
+    s3.create_bucket(Bucket=bucket_name)
+    return bucket_name
+```
+
+pytest文件可以直接这样写就行了
+```python
+import pytest
+import boto3
+from moto import mock_aws
+from main import create_s3_bucket
+
+@mock_aws
+def test_create_s3_bucket():
+    """
+    测试创建S3存储桶的功能
+    使用moto库模拟S3服务
+    """
+    # 准备测试数据
+    bucket_name = "test-bucket"
+    
+    # 调用被测函数
+    result = create_s3_bucket(bucket_name)
+    
+    # 验证结果
+    assert result == bucket_name
+    
+    # 验证桶是否真的被创建
+    s3_client = boto3.client('s3')
+    response = s3_client.list_buckets()
+    buckets = [bucket['Name'] for bucket in response['Buckets']]
+    assert bucket_name in buckets
+
+@mock_aws
+def test_create_s3_bucket_already_exists():
+    """
+    测试当桶已存在时的行为
+    """
+    bucket_name = "existing-bucket"
+    
+    # 先创建一个桶
+    s3_client = boto3.client('s3')
+    s3_client.create_bucket(Bucket=bucket_name)
+    
+    try:
+        # 尝试再次创建同名桶
+        create_s3_bucket(bucket_name)
+        # 如果没有引发异常，测试失败
+        assert False, "应该引发BucketAlreadyExists或者ClientError异常"
+    except (s3_client.exceptions.BucketAlreadyExists, Exception) as e:
+        # 验证异常类型是否符合预期
+        assert "BucketAlreadyExists" in str(e) or "ClientError" in str(e)
+```
+
 同样，如果想要 mock AWS S3 的API，比如GetObject，那需要先用 moto 创建一个S3 bucket，在在这个mock的bucket里，调用PutObject API给放一些内容，之后在需要测试的函数里，正常调这个moto创建的资源。
