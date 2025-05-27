@@ -70,7 +70,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "uv",
+                "query": "pydantic",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -91,7 +91,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -187,8 +188,9 @@
   },
   "active": "69e20293c50931c5",
   "lastOpenFiles": [
-    "SUMMARY.md",
+    "Programming/Python/Python的语法糖.md",
     "Programming/Python/Python项目管理.md",
+    "SUMMARY.md",
     "Programming/Python/自动化测试pytest.md",
     "Programming/前端/Vue/Vue基础.md",
     "Programming/前端/Vue/Vue Cli.md",
@@ -212,7 +214,6 @@
     "OpenSource/K8S/helm/helm基础.md",
     "OpenSource/K8S/chaos/混沌工程.md",
     "OpenSource/gRPC/RPC与REST.md",
-    "OpenSource/ELK/Kibana_可视化.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
