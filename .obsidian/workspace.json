@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "OpenSource/K8S/k8s_basic.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "K8S_DeepDive"
+              "title": "k8s_basic"
             }
           }
         ]
@@ -141,13 +141,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "OpenSource/K8S/k8s_basic.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "K8S_DeepDive 的大纲"
+              "title": "k8s_basic 的大纲"
             }
           }
         ],
@@ -171,6 +171,7 @@
   },
   "active": "0cba8b6b98fa49fc",
   "lastOpenFiles": [
+    "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/K8S/k8s_basic.md",
     "OpenSource/K8S/istio.md",
     "OpenSource/K8S/enter_node.md",
@@ -196,7 +197,6 @@
     "Tools/FRP配置.md",
     "Linux/jq.md",
     "Linux/neovim.md",
-    "Linux/yum.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",

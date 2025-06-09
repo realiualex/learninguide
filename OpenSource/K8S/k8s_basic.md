@@ -156,14 +156,13 @@ kubectl edit configmap coredns -n kube-system
 然后可以起一个测试dns的pod来测一下解析
 ```
  kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
-
+```
 
 不过在云平台托管的k8s中，如Azure的AKS中，无权限编辑 Corefile，以Azure为例，Azure提供的aks的coredns的deployment中，添加了对挂载的volume的支持，通过查看coredns的deployment可以看到，默认挂载了一个叫做 coredns-custom的ConfigMap，因此我们可以创建一个名为 coredns-custom的configmap，在这个configmap中来添加自定义DNS解析的条目.
 
 首先先看一下默认的配置:  
 ```
 kubectl describe deployment coredns -n kube-system
-
 
   Volumes:
    config-volume:
