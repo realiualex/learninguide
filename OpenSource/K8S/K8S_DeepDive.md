@@ -95,3 +95,87 @@ selector:
 ## 重新调度
 
 如果 K8s 的节点负载不均衡，比如新增加了节点，或者之前在维护的时候，对节点上的pod做了驱逐，想要重新balance下，可以用 [descheduler](https://github.com/kubernetes-sigs/descheduler) 这样的插件
+
+
+## cloud secrets 管理
+由于 k8s secrets 是明文存储的，并不是特别安全，所以一般会将secrets 存在外部，比如 AWS Secrets Manager, Azure Key Vault, HashiCorp Vault里等，在使用的时候，需要创建一个 service account，将 cloud secret 跟k8s 里的service account进行绑定，之后再创建SecretProviderClass，以及创建容器pod或 deployment，在deployment里，指定 serviceAccount，以及Volume，volume里需要指定csi driver以及 volumeAttributes，这些都是k8s sig 里的标准用法，云厂商只需要在 SecretProviderClass里实现 secret与 k8s volume csi driver之间的对接就可以了。
+一般来说，都是通过volume挂载到 k8s 的某一个文件路径，不过也可以在 SecretProviderClass 的 .spec.secretObjects 里指定映射为 k8s 里标准的secret，然后在 Deployment 的 .spec.containers[0].env.valueFrom.secretKeyRef 里，引用这个对象
+一个完整华为云CCE的示例（即包含了映射为env，也包含了映射为volume，实际使用可以只用其中一种方法）
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: alex-secrets
+  namespace: alex-test
+  annotations:
+    cce.io/dew-resource: "[\"alex-secrets\"]"  #secrets that allow pod to use
+
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: alex-spc-test
+  namespace: alex-test
+spec:
+  provider: cce     # The value is fixed at cce.
+  parameters:
+    objects: |
+          - objectName: "alex-secrets"
+            objectVersion: "latest"
+            objectType: "csms"
+  secretObjects:
+    - secretName: alex-secrets-env
+      type: Opaque
+      data:
+        - objectName: alex-secrets
+          key: alex-secrets
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alex-nginx
+  namespace: alex-test
+spec:
+  selector:
+    matchLabels:
+      app: alex-nginx
+  template:
+    metadata:
+      labels:
+        app: alex-nginx
+    spec:
+      containers:
+      - name: alex-nginx
+        image: nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: alex-secrets-volume
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+        env:
+          - name: ALEX_SECRET_ENV
+            valueFrom:
+              secretKeyRef:
+                name: alex-secrets-env
+                key: alex-secrets
+      serviceAccountName: alex-secrets
+      volumes:
+        - name: alex-secrets-volume
+          csi: 
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "alex-spc-test"
+
+
+```
