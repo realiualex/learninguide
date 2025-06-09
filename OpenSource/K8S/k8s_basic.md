@@ -95,7 +95,7 @@ kubectl version
 ```shell
 KUBECTL_APPLYSET=true kubectl apply -f <directory/> --prune --applyset=<name>
 ```
-```
+
 除了k8s自带的这个功能之外，argoCD 也能实现类似的功能，也是靠自动打label实现的，这样argoCD就能知道哪些资源是argoCD创建的。argoCD如果发现 k8s里的资源状态，跟仓库里不一致，会标记为 不一致，也可以启用自动sync为仓库里的状态(需要手动启用)。
 
 ## 常用测试的yaml
