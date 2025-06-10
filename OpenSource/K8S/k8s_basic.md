@@ -88,7 +88,17 @@ kubectl api-resources
 ```
 kubectl version
 ```
+
+* 检查当前用户
+```shell
+kubectl auth whoami
+```
 ``
+* 访问api，比如获得jwts信息
+```shell
+kubectl get --raw /openid/v1/jwks
+```
+
 ##  k8s prune
 以前在k8s 1.5的时候， kubectl 就支持 --prune 参数，但当时是靠label来实现的，会遍历包含这个label的所有资源，看是否跟 yaml文件里的match，如果发现有这个label的资源，但yaml里没有，就会删除。
 在 [k8s 1.27](https://kubernetes.io/blog/2023/05/09/introducing-kubectl-applyset-pruning/) (2023年5月份)的时候，支持了 KUBECTL_APPLYSET的功能，在创建资源的时候，需要启用 APPLYSET以及加上 --prune，此时资源会被自动打上特定label。之后再次apply的时候会进行对比。
