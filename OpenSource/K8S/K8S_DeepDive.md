@@ -184,3 +184,9 @@ spec:
 * 只要是 k8s service account，k8s 就会将其生成 jwt token，在 k8s 1.24之前，这个 jwt token是长期存在 k8s secrets里，但是1.24以后，就需要用户挂载为 volume，放在pod指定路径下，k8s自己刷新这个jwt token，变成短期token。
 * 在k8s没有开启OIDC能力的时候，k8s 的service颁发的jwt token，只能用于k8s集群内的认证，因为只有 k8s api server能验证这个 jwt token的有效性
 * 如果想要把jwt token放到k8s外部验证，就需要k8s开启 OIDC的能力了
+* 获得 k8s jwt token内容的方法:
+
+```shell
+kubectl get --raw /openid/v1/jwks
+```
+
