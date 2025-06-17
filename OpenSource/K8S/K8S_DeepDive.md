@@ -176,6 +176,11 @@ spec:
             readOnly: true
             volumeAttributes:
               secretProviderClass: "alex-spc-test"
-
-
 ```
+
+## k8s 的 oidc 认证
+对于云厂商来说，很多是将 k8s service account 创建的 jwt token，通过 assume role with web identity 的方式，跟云平台交换出来 ak sk，使pod内能够获得云平台cred的能力。
+这里需要说明的是：
+* 只要是 k8s service account，k8s 就会将其生成 jwt token，在 k8s 1.24之前，这个 jwt token是长期存在 k8s secrets里，但是1.24以后，就需要用户挂载为 volume，放在pod指定路径下，k8s自己刷新这个jwt token，变成短期token。
+* 在k8s没有开启OIDC能力的时候，k8s 的service颁发的jwt token，只能用于k8s集群内的认证，因为只有 k8s api server能验证这个 jwt token的有效性
+* 如果想要把jwt token放到k8s外部验证，就需要k8s开启 OIDC的能力了
