@@ -190,3 +190,15 @@ spec:
 kubectl get --raw /openid/v1/jwks
 ```
 
+## cpu pinning
+如果 K8S 的节点配置比较高，有很多cpu核心，那么在这个节点启动的容器，有可能会不停的在不同的CPU上进行切换，甚至是不同的NUMA节点之间切换，导致上下文切换过多和缓存未命中，从而增加延迟，尤其是对cpu调度比较敏感的任务，cpu pinning可以为其绑定cpu核心，减少上下文切换次数。  
+默认情况下，kubelet 可能并未启用 cpu pinning，这个需要k8s worker node里的 kubelet 进程在启动的时候，加上 --cpu-manager-policy=static 参数才能启动。如果是AWS EKS，需要自定义 launch template，然后在 EC2 userdata里，通过脚本改 kubelet 的这个参数(以前是 /etc/eks/bootstrap.sh，现在改成了 nodeadm 程序).  
+在 kubelet 开启了 cpu-manager-policy=true 的 k8s 节点上（ v1.26+， 2022年12月发布），必须满足下面条件，启动的容器才会跟 cpu 核心绑死。
+* Pod QoS 必须是 Guaranteed(即 cpu request 和 limit 一样)，不能是 Burstable 或 BestEffort
+	* 如果Pod里容器不设置 request 和limit，QoS 是 BestEffort
+	* 如果 pod 的每个容器的request 和limit 都是一样的，QoS 就是 Guaranteed
+	* 如果Pod里，至少有一个容器设置了request(没有要求设置 limit)，QoS就是 Burstable (如果Pod里有2个容器，一个设置了一样的limit 和 request，另一个什么也没设置，此时也是 Burstable，因为 Guaranteed 要求每个容器的 limit 和 request 都一样)
+* 除了 CPU 的request 和 limit 要一样之外，必须是整数值 (如 "cpu": "2")，不能是 100m 这类 millicore ("cpu": "100m")
+
+如果一个k8s节点开启了 cpu pinning, 假设这个节点有4个vcpu，此时有一个pod满足cpu pinning的要求，假设申请了 2个vcpu，此时跟 cpu 0 和 cpu 3 绑定了。cpu 0 和cpu 3 就会从共享池中移除，后续调度到这个节点的pod，只能用 cpu 1 和 cpu 2（无论后续pod是否满足 cpu pinning），无法跑在 cpu 0 和 cpu 3 上
+
