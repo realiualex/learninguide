@@ -108,6 +108,38 @@ KUBECTL_APPLYSET=true kubectl apply -f <directory/> --prune --applyset=<name>
 
 除了k8s自带的这个功能之外，argoCD 也能实现类似的功能，也是靠自动打label实现的，这样argoCD就能知道哪些资源是argoCD创建的。argoCD如果发现 k8s里的资源状态，跟仓库里不一致，会标记为 不一致，也可以启用自动sync为仓库里的状态(需要手动启用)。
 
+## nodeSelector 和 nodeAffinity
+nodeAffinity 是升级版本的 nodeSelector，都是选择任务调度到哪个node上的。nodeSelector比较简单，也容易写，但不支持复杂的逻辑，比如OR、Exists、DoesNotExist、In、NotIn运算符等(只支持AND)。nodeAffinity比较复杂，支持逻辑运算符，但逻辑比较复杂，没有nodeSelector那么简单。  
+简单来讲，nodeSelector是“必须满足”，而 nodeAffinity是“更聪明的选择节点”（比如优先选择A节点，如果A没有，则选择B节点，并且B节点不是测试环境）。也许未来有一天，nodeSelector会被nodeAffinity完全替代
+
+## taint 和 tolerations 
+虽然 nodeSelector 或 nodeAffinity 已经能够实现节点的选择，可是有时候，我们想要实现一些特殊的功能。比如我有不同的节点组，节点组A是给业务A用的，节点组B是给业务B用的，节点C是给运维工具用的。A和B由于都是业务，所以业务yaml都是自己写的。但安装运维工具的时候，很多运维工具yaml是互联网上其他人提供的，我们没法指定 nodeSelector 或 nodeAffinity。此时我们可以给节点组 A 和节点组 B 打上污点taint，这样运维工具就不能安装到节点组 A 和 B 上了。然后部署业务 A服务的时候，我们可以用 tolerations 来允许污点 A，同样部署B服务的时候，用tolerations 允许污点B，从而实现节点任务的调度。  
+但并不是说，有了 taint 和 tolerations 就不需要 nodeSelector/nodeAffinity 了，如果在节点组A里，有更复杂的逻辑，想要实现某一个服务，在节点组A的指定机器上，就是需要 nodeSelector / nodeAffinity 的.
+
+## overhead 与 request/limit
+在创建pod的时候，可以指定 request 和 limit 的cpu 与memory，比如cpu 为100m，指的是1个逻辑cpu的0.1 （1000为1个逻辑cpu），其中request指的是要求这个pod被调度的机器上，至少有 request要求的资源，limit指的是这个pod里的进程最多用的资源。  
+注意request 和limit，指的是pod里的进程用的资源，但实际pod在启动的时候，pod本身也会占用一定的资源，比如pod的网络插件，log插件等等。而为了管理pod所占用资源的定义，就是 overhead。所以当pod进行调度的时候，要求node上的资源至少满足 request + overhead 之和。  
+需要注意的是，overhead是在 RuntimeClass 上定义的，而并非在pod上定义。一般集群管理员统一设置 overhead，在创建pod的时候，通过 spec.runtimeClassName选择这个runtime class，不能直接把 overhead写到pod的定义里，如果在pod的yaml里直接写overhead，kubnernetes的准入控制器会拒绝这个pod的创建。  
+没有办法设置默认的 Runtime Class，也就意味着，k8s 集群里，可以有多个Runtime class，如果pod没有指定，则没有启用overhead检查，pod在调度的时候，只按 request 的 cpu/memory 进行调度，而并不会把 request 和 overhead 加一起作为判断标准.
+
+```yaml
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: kata-fc
+handler: kata-fc
+overhead:
+  podFixed:
+    memory: "120Mi"
+    cpu: "250m"
+```
+
+pod 规范里只需要这样写就能引用这个配置
+```yaml
+spec:
+  runtimeClassName: kata-fc
+```
+
 ## 常用测试的yaml
 
 * [创建deployment](nginx-dep.yaml)
