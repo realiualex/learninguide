@@ -202,3 +202,9 @@ kubectl get --raw /openid/v1/jwks
 
 如果一个k8s节点开启了 cpu pinning, 假设这个节点有4个vcpu，此时有一个pod满足cpu pinning的要求，假设申请了 2个vcpu，此时跟 cpu 0 和 cpu 3 绑定了。cpu 0 和cpu 3 就会从共享池中移除，后续调度到这个节点的pod，只能用 cpu 1 和 cpu 2（无论后续pod是否满足 cpu pinning），无法跑在 cpu 0 和 cpu 3 上
 
+
+## Pod Priority 和 Preemption(抢占)
+默认情况下，k8s 有两个 priority class，分别是 system-node-critical 和 system-cluster-critical，其中 system-node-critical 的优先级更高一些（数字越大，优先级越高）。在创建 Pod 的时候，在pod的 .spec 下可以通过 priorityClassName 来指定使用哪个 priority class。如果没有指定 priority class，那么pod 的优先级是0，即为最低的。此时只要指定了priority class的pod，如果资源不够，就会杀死没有指定priority class的，然后自己调度过来。
+由于系统默认的 system-node-critical  高于system-cluster-critical，所以如果一个机器上，资源只够起1个pod，假设第一个pod的 priority class name是 system-cluster-critical，那么起第二个pod的时候，假设为 system-node-critical ，就会杀死第一个pod，将第二个pod启动。
+
+preemption 是 priority class里的一个功能，默认情况下 preemptionPolicy 是 PreemptLowerPriority，也就是如上述所说，会驱逐低优先级的pod。但如果你不想让它自动驱逐，想要让它等待系统有资源的时候，优先抢占这个资源，那么可以将 preemptionPolicy 设置为 Never
