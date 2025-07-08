@@ -189,6 +189,12 @@ spec:
 ```shell
 kubectl get --raw /openid/v1/jwks
 ```
+### oidc token
+一般我们经常听到 id token 和 access token，这两个token 都是jwt 格式的，但用途不同。id token是做 authentication认证的，而 access token 是做 authorization 授权的。具体说来
+* id token: 这个token里存的是用户的信息，比如 username, email, profile 等等信息，这样你的网站，可以拿到第三方oidc的身份提供商的用户信息，在网站上做展示。甚至verify了这个id token信息之后，就可以直接登录成功。
+* access token：这个token是用来请求颁发这个token的api server的接口的。比如网站A，用了 google oidc 登录，那么网站A应该只用 google的 id token，获得用户的身份信息，假设网站A的api 接口，也是jwt token格式，那么网站A的接口，应该用网站A自己颁发的 access token，而并非google 的access token
+* refresh token: 一般来说，access token由于请求的时候，会在互联网上传递，所以有被黑客盗取的风险，那么我们就把 access token的有效期设置短一点。客户端在向服务器申请 access token 的时候，一些服务器会把refresh token也返回过来，客户端可以将refresh token保留到本地。一旦access token 过期，不需要用户认证，拿这个fresh token换一个新的access token就可以了。需要注意的是：access token 是在网络传输的时候被盗取，而refresh token依然存在本地被盗取的风险（即使access token过期，只要refresh token本地还存在，黑客就能交换出access token）
+
 
 ## cpu pinning
 如果 K8S 的节点配置比较高，有很多cpu核心，那么在这个节点启动的容器，有可能会不停的在不同的CPU上进行切换，甚至是不同的NUMA节点之间切换，导致上下文切换过多和缓存未命中，从而增加延迟，尤其是对cpu调度比较敏感的任务，cpu pinning可以为其绑定cpu核心，减少上下文切换次数。  

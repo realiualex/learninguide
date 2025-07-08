@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenSource/K8S/k8s_basic.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "k8s_basic"
+              "title": "K8S_DeepDive"
             }
           }
         ],
@@ -70,7 +70,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "oidc",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -91,7 +91,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -157,13 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenSource/K8S/k8s_basic.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "k8s_basic 的大纲"
+              "title": "K8S_DeepDive 的大纲"
             }
           }
         ],
@@ -187,19 +188,20 @@
   },
   "active": "d7d32c8d0568278f",
   "lastOpenFiles": [
-    "SUMMARY.md",
-    "README.md",
-    "OpenSource/K8S/k8s_basic.md",
-    "OpenSource/K8S/k8s_X509_client_cert.md",
-    "OpenSource/K8S/k8s网络.md",
-    "Security/HTTP常见攻击.md",
-    "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/K8S/k8s_oidc.md",
-    "OpenSource/K8S/istio.md",
+    "OpenSource/K8S/K8S_DeepDive.md",
+    "OpenSource/K8S/K8S_Secrets管理.md",
     "OpenSource/K8S/enter_node.md",
     "OpenSource/K8S/Docker基础.md",
     "OpenSource/K8S/CRD开发.md",
+    "OpenSource/K8S/istio.md",
+    "OpenSource/K8S/k8s_basic.md",
+    "OpenSource/K8S/k8s_X509_client_cert.md",
     "OpenSource/K8S/生态.md",
+    "OpenSource/K8S/k8s网络.md",
+    "SUMMARY.md",
+    "README.md",
+    "Security/HTTP常见攻击.md",
     "Programming/Python/Python项目管理.md",
     "Programming/Python/Python的语法糖.md",
     "Programming/Python/自动化测试pytest.md",
@@ -212,7 +214,6 @@
     "Tools/工具集.md",
     "Tools/视频处理ffmpeg.md",
     "Tools/密码管理.md",
-    "Tools/iterm2美化.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
