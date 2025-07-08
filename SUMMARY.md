@@ -8,7 +8,7 @@
   * [Azure CMI SDWAN](Azure/Azure_CMI_SDWAN.md)
   * Azure LB DeepDive
     * [Azure LB DeepDive](Azure/Azure_LB_DeepDive/Azure_LB_DeepDive.md)
-  * [Azure Service Principal Basic](Azure/Azure_Service_Principal_Basic.md)
+  * [Azure Service Principal Basic](Azure/Azure_Credential.md)
   * Azure Internal VM Network Connectivity
     * [Azure Internal VM Network Connectivity](Azure/Azure_internal_VM_Network_Connectivity/Azure_internal_VM_Network_Connectivity.md)
   * [Azure Cli Build](Azure/azure_cli_build.md)

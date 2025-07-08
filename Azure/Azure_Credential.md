@@ -59,7 +59,7 @@ az ad signed-in-user show
 ### 使用k8s oidc 的jwt token，换Azure 平台的token
 Azure AKS 或者AWS EKS，都支持将 OIDC 放在公网上，或者我们用 github action， terraform cloud等，都是一个oidc provider，那么我们想在这些地方，获得azure 平台的token，就可以通过创建一个 managed identity，然后在 managed identity 里，创建一个 Federated credentials，在这里输入 OIDC issuer 地址，以及 sub (k8s 的sub 就是 service account，如 system:serviceaccount:default:alex-test-sa)，然后需要将这个 service account 挂载到 k8s里，之后就能用这个 service account 的 jwt token，换azure 平台的 access token了。  
 
-示例换法:  
+示例换法(有关sdk实现在[这里](https://github.com/Azure/azure-workload-identity/blob/main/examples/msal-python/token_credential.py)):  
 ```shell
 curl -H "Content-Type: application/x-www-form-urlencoded" -X POST https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/token \
   -d "client_id=MANAGE_IDENTITY_CLIENT_ID" \
