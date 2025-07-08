@@ -1,4 +1,5 @@
-#### 使用Azure Service Principal 登录Azure CLI
+## Azure CLI
+### 使用Azure Service Principal 登录Azure CLI
 ##### 创建 Azure Service Principal 
 Azure Service Principal 是Azure AD 中提供的一种身份验证功能，可以通过Azure SP登录Azure CLI, Teraform, Azure PowerShell, SDK 等。Azure Service Prinicipal还提供了OAuth 2.0，OIDC(Open ID Connect), SAML, Microsoft Graph API等多种身份验证接口，方便开发人员快速开发应用。
 
@@ -42,11 +43,31 @@ az logout
 
 ```
 
-
-##### 使用azure cli登录到不同的云
+### 查看登录身份
+```
+az ad signed-in-user show
+```
+### 使用azure cli登录到不同的云
 ```
  az cloud list --output table
  az cloud set --name AzureChinaCloud
  az login
  # https://docs.microsoft.com/zh-cn/cli/azure/manage-clouds-azure-cli?toc=%2Fcli%2Fazure%2Ftoc.json&bc=%2Fcli%2Fazure%2Fbreadcrumb%2Ftoc.json&view=azure-cli-latest
 ```
+
+## Azure OAuth Deep Dive
+### 使用k8s oidc 的jwt token，换Azure 平台的token
+Azure AKS 或者AWS EKS，都支持将 OIDC 放在公网上，或者我们用 github action， terraform cloud等，都是一个oidc provider，那么我们想在这些地方，获得azure 平台的token，就可以通过创建一个 managed identity，然后在 managed identity 里，创建一个 Federated credentials，在这里输入 OIDC issuer 地址，以及 sub (k8s 的sub 就是 service account，如 system:serviceaccount:default:alex-test-sa)，然后需要将这个 service account 挂载到 k8s里，之后就能用这个 service account 的 jwt token，换azure 平台的 access token了。  
+
+示例换法:  
+```shell
+curl -H "Content-Type: application/x-www-form-urlencoded" -X POST https://login.microsoftonline.com/TENANT_ID/oauth2/v2.0/token \
+  -d "client_id=MANAGE_IDENTITY_CLIENT_ID" \
+  -d "scope=https://management.azure.com/.default" \
+  -d "grant_type=client_credentials" \
+  -d "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" \
+  -d "client_assertion=JWT_TOKEN"
+```
+
+注意我们这里用的是 [client credential](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-client-creds-grant-flow#third-case-access-token-request-with-a-federated-credential) 的方式换的token，而不是 on behalf of。对于 Federated Credential，当前都是用client credential  换的。on behalf of指的是，已经有了一个 azure 平台的 access token，去换另外一个access token。OBO 的一个典型用法是，第一个access token，信任的audience，比如是A，但是要访问另外一个接口，另外的接口只信任audience B，所以就要通过OBO的方式，将第一个access token，换成第二个audience为B的access token.
+
