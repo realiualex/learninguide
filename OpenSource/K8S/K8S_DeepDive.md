@@ -192,8 +192,30 @@ kubectl get --raw /openid/v1/jwks
 ### oidc token
 一般我们经常听到 id token 和 access token，这两个token 都是jwt 格式的，但用途不同。id token是做 authentication认证的，而 access token 是做 authorization 授权的。具体说来
 * id token: 这个token里存的是用户的信息，比如 username, email, profile 等等信息，这样你的网站，可以拿到第三方oidc的身份提供商的用户信息，在网站上做展示。甚至verify了这个id token信息之后，就可以直接登录成功。
-* access token：这个token是用来请求颁发这个token的api server的接口的。比如网站A，用了 google oidc 登录，那么网站A应该只用 google的 id token，获得用户的身份信息，假设网站A的api 接口，也是jwt token格式，那么网站A的接口，应该用网站A自己颁发的 access token，而并非google 的access token
+* access token：可以不是jwt 格式的。这个token是用来请求颁发这个token的api server的接口的。比如网站A，用了 google oidc 登录，那么网站A应该只用 google的 id token，获得用户的身份信息，网站A的接口，应该用网站A自己颁发的 access token，而并非google 的access token。
 * refresh token: 一般来说，access token由于请求的时候，会在互联网上传递，所以有被黑客盗取的风险，那么我们就把 access token的有效期设置短一点。客户端在向服务器申请 access token 的时候，一些服务器会把refresh token也返回过来，客户端可以将refresh token保留到本地。一旦access token 过期，不需要用户认证，拿这个fresh token换一个新的access token就可以了。需要注意的是：access token 是在网络传输的时候被盗取，而refresh token依然存在本地被盗取的风险（即使access token过期，只要refresh token本地还存在，黑客就能交换出access token）
+
+#### oidc 的三种token
+一般oidc里，，分别是 code, id_token 和 token，这个跟oidc的认证授权流程有关，一般有三种：授权码流程( code，即Authorization Code Flow)，隐式流程(id_token，即Implicit Flow)和混合流程 (code id_token token，即 Hybrid Flow)。code 指的是授权码，本身不包含用户信息，需要拿它去 OIDC服务器的 /token 接口换 token。id_token 指的是隐式流程里的id token，包含了用户信息，比如 sub, name, email 等。token 指的是 access token，可以直接访问API的，格式可以是 jwt，也可以不是jwt
+
+```json
+{
+    "response_types_supported":
+    [
+        "code",
+        "id_token",
+        "code id_token",
+        "id_token token"
+    ]
+}
+```
+
+##### implicit flow
+浏览器访问 OIDC provider的时候，OIDC provider直接把 id token 和 access token 发给浏览器，之后浏览器再拿着这两个token 访问对应的资源网站。
+
+#####  code flow
+假设有一个电商网站，使用了 google oidc 登录，在授权码流程下，用户浏览器跟google 交互，拿到 code，然后用户浏览器跟电商网站交互，将code发出去，电商网站通过code，跟google交换拿到id token 和 access token。此时跟谷歌的交互，是电商网站服务器发出去的，并不是用户的浏览器发出去的，因此要比 implicit flow 更安全
+
 
 
 ## cpu pinning
