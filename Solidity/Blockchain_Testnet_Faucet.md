@@ -9,4 +9,7 @@ https://sepolia.etherscan.io/address/0x9ee0E0Dec640866D96cF93F0cD7388B61a0a9cBc
 
 //如果是 ETH Holesky Faucet，能申请0.1个，比Sepolia多一些: https://www.holeskyfaucet.io/
 // 在这里能申请到各个链上的 LINK 代币: https://faucets.chain.link/
+
+// bsc testnet
+https://www.bnbchain.org/en/testnet-faucet
 ```

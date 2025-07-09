@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "Solidity/Blockchain_Testnet_Faucet.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "K8S_DeepDive"
+              "title": "Blockchain_Testnet_Faucet"
             }
           },
           {
@@ -172,13 +172,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "Solidity/Blockchain_Testnet_Faucet.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "K8S_DeepDive 的大纲"
+              "title": "Blockchain_Testnet_Faucet 的大纲"
             }
           }
         ],
@@ -202,6 +202,8 @@
   },
   "active": "f2e3989b87808b2c",
   "lastOpenFiles": [
+    "Solidity/solidity_basic.md",
+    "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/K8S/k8s_oidc.md",
     "Azure/Azure_Credential.md",
     "SUMMARY.md",
@@ -210,7 +212,6 @@
     "OpenSource/SSH_Tunnel_上网.md",
     "OpenSource/Gitlab与AzureAD集成.md",
     "Azure/Azure_CMI_SDWAN.md",
-    "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/K8S/K8S_Secrets管理.md",
     "OpenSource/K8S/enter_node.md",
     "OpenSource/K8S/Docker基础.md",
@@ -227,7 +228,6 @@
     "Programming/Python/自动化测试pytest.md",
     "Programming/前端/Vue/Vue基础.md",
     "Programming/前端/Vue/Vue Cli.md",
-    "Programming/Python/python常用装饰器.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
