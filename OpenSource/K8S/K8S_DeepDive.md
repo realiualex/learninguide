@@ -267,7 +267,9 @@ kubectl get flowschemas
 在做 k8s 开发的时候，如果想要知道一个资源的变化，如果通过 poll的方式，可能会对 api server有很大的压力，那么我们可以用 client-go 里的 informer 库，基于事件(watch 机制)来监控资源的变动。比较典型的场景就是 controller/operator,自动化平台，资源监控等开发。
 如果资源比较少，也可以直接向api server发起请求的时候，加上 `?watch=true` 通过长链接来推送对象变化事件。但是这个跟informer相比，本地没有缓存，是stateless的，连接断开后容易丢事件，不容易断点续传，这个非常麻烦。而informer帮我们都自动做好了这个。
 
-
+```
+kubectl get --raw /
+```
 ## k8s 里的 thundering herds (惊群效应)
 惊群效应指的是在多进程或多线程编程模型中，多个进程或线程同时阻塞等待同一个事件，一旦事件发生，所有线程或进程都会被唤醒，但只有一个线程或进程处理这个事件，其余的线程和进程只能再次进入休眠状态，从而造成比较严重的性能浪费。基于 linux 的epoll 机制在开发的时候，需要注意这个事情。
 
