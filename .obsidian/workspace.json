@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Solidity/Blockchain_Testnet_Faucet.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "Blockchain_Testnet_Faucet"
+              "title": "K8S_DeepDive"
             }
           },
           {
@@ -172,13 +172,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Solidity/Blockchain_Testnet_Faucet.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Blockchain_Testnet_Faucet 的大纲"
+              "title": "K8S_DeepDive 的大纲"
             }
           }
         ],
@@ -202,6 +202,7 @@
   },
   "active": "f2e3989b87808b2c",
   "lastOpenFiles": [
+    "Solidity/Blockchain_Testnet_Faucet.md",
     "Solidity/solidity_basic.md",
     "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/K8S/k8s_oidc.md",
@@ -227,7 +228,6 @@
     "Programming/Python/Python的语法糖.md",
     "Programming/Python/自动化测试pytest.md",
     "Programming/前端/Vue/Vue基础.md",
-    "Programming/前端/Vue/Vue Cli.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",

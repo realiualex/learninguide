@@ -236,3 +236,41 @@ kubectl get --raw /openid/v1/jwks
 由于系统默认的 system-node-critical  高于system-cluster-critical，所以如果一个机器上，资源只够起1个pod，假设第一个pod的 priority class name是 system-cluster-critical，那么起第二个pod的时候，假设为 system-node-critical ，就会杀死第一个pod，将第二个pod启动。
 
 preemption 是 priority class里的一个功能，默认情况下 preemptionPolicy 是 PreemptLowerPriority，也就是如上述所说，会驱逐低优先级的pod。但如果你不想让它自动驱逐，想要让它等待系统有资源的时候，优先抢占这个资源，那么可以将 preemptionPolicy 设置为 Never
+
+## APF (API Priority and Fairness)
+如果 k8s API server 太忙，会报错 429 too many requests，可以监控 apiserver_flowcontrol_rejected_requests_total 这个指标
+
+```
+kubectl get --raw /metrics | grep apiserver_flowcontrol_rejected_requests_total
+```
+
+其他几个有用的指标是
+```
+- apiserver_flowcontrol_dispatched_requests_total
+- apiserver_flowcontrol_request_execution_seconds
+- apiserver_flowcontrol_request_wait_duration_seconds
+```
+
+这个流控，一般是靠 PriorityLevelConfigurations 和 FlowSchema 实现的，其中 FlowSchema 负责分类请求，并指定其应该对应哪个 PriorityLevelConfiguration，PriorityLevelConfiguration 决定了每个优先级对应的流量配额和处理方式
+```
+请求A --> FlowSchema1  [匹配规则] --> PriorityLevelConfiguration-X（高优先级）
+请求B --> FlowSchema2  [匹配规则] --> PriorityLevelConfiguration-Y（低优先级）
+```
+
+
+可以用这个命令来看他们之间的关系
+```
+kubectl get flowschemas
+```
+
+## k8s 开发
+在做 k8s 开发的时候，如果想要知道一个资源的变化，如果通过 poll的方式，可能会对 api server有很大的压力，那么我们可以用 client-go 里的 informer 库，基于事件(watch 机制)来监控资源的变动。比较典型的场景就是 controller/operator,自动化平台，资源监控等开发。
+如果资源比较少，也可以直接向api server发起请求的时候，加上 `?watch=true` 通过长链接来推送对象变化事件。但是这个跟informer相比，本地没有缓存，是stateless的，连接断开后容易丢事件，不容易断点续传，这个非常麻烦。而informer帮我们都自动做好了这个。
+
+
+## k8s 里的 thundering herds (惊群效应)
+惊群效应指的是在多进程或多线程编程模型中，多个进程或线程同时阻塞等待同一个事件，一旦事件发生，所有线程或进程都会被唤醒，但只有一个线程或进程处理这个事件，其余的线程和进程只能再次进入休眠状态，从而造成比较严重的性能浪费。基于 linux 的epoll 机制在开发的时候，需要注意这个事情。
+
+在非常大的k8s集群中，当k8s集群里加入或移除较多的节点，假设节点上有比较多的daemonset，那么会有大量的pod创建或删除的事件，成千上万个 pod （进程）突然做同一件事情，k8s 控制平面会有很大的压力，甚至会引起集群雪崩。所以一般建议，对于 daemonset，使用 RollingUpdate 的更新策略，比如设置 `maxUnavailable: 1`，每次只会有 1 个节点的 Pod 被杀掉、重建，更新完成并恢复可用后才会轮到下一个节点。这样整个升级过程是**串行推进**的
+
+
