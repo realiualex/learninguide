@@ -307,6 +307,14 @@ cast send --gas-limit 1000000 --private-key xxx --rpc-url https://1rpc.io/sepoli
 
 
 
+## 工具
+区块链交易debug工具
+https://dashboard.tenderly.co/
+
+当你有一笔交易，或者执行某一个合约报错的时候，区块链浏览器一般显示的信息很有限，比如下面测试的这个，只能看出合约执行失败，但为什么失败，没有太多线索
+https://sepolia.etherscan.io/tx/0x3fa7fcbd2e24b32bf952792a2e082f25cf66024f39c4fd76e629a3afc5d0a09e
+
+但在上面的tenderly.co工具里，可以输入tx id进行查询，就能很清楚的看到执行哪个合约文件的哪个方法报错了，在这里还可以直接 看合约内容，并提供了搜索功能。能很方便debug.
 
 
 ## 参考资料 
