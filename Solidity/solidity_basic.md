@@ -254,6 +254,53 @@ module.exports = {
 
 之后执行 truffle compile 进行编译，编译之后，能看到 build/contracts下有很多ABI json文件，之后 node getData.js 就可以得到data了
 
+
+## 合约调用
+
+可以使用 cast 命令来调用合约。 安装cast命令前，需要安装 foundry toolchain，然后执行 foundryup 命令就安装好了
+```
+https://getfoundry.sh/introduction/installation/
+```
+
+下面的命令，是执行 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 合约里的 execute 方法，execute 支持3个参数，分别是 address, unit256, bytes，第一个address的值是 [0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4](https://sepolia.etherscan.io/address/0x08210f9170f89ab7658f0b5e3ff39b0e03c594d4#writeProxyContract)，这是一个ERC20代币合约地址，第二个 uint256为0，第三个 bytes的值是 cast calldata 的执行结果。cast calldata 后面的 transfer(address, uint256)，是0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4 这个合约里提供的方法
+```
+cast send --gas-limit 1000000 --private-key xxx --rpc-url https://1rpc.io/sepolia 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 "execute (address,uint256,bytes)" 0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4 0 $(cast calldata "transfer(address,uint256)" 0xF79ef8dcebAd5cbA8E8Af563D46590498C50d7Bf 1)
+```
+
+在上述ERC20代币的 implement contract里，可以看到 transfer 这个function 的input，我们在调用的时候，用的是 type，而并非name，而且严格按照顺序，因此是 transfer(address, uint256)，而并非 transfer(to, value)。这个要注意.
+
+```json
+[
+    {
+        "inputs":
+        [
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            }
+        ],
+        "name": "transfer",
+        "outputs":
+        [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
+]
+```
+
+
 ## 故障排查
 
 如果合约在执行的时候，有这样的报错 "0x0 Transaction mined but execution failed"，表示交易已经被矿工打包，并且在区块链上被确认，但是在执行过程中失败了，这时候通常会发生 revert，也就是合约执行出错导致回滚。举个例子，比如合约B调用合约A，但是输入的参数不对，就会出现这个情况

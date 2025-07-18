@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "Solidity/solidity_basic.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "K8S_DeepDive"
+              "title": "solidity_basic"
             }
           }
         ]
@@ -141,13 +141,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenSource/K8S/K8S_DeepDive.md",
+                "file": "Solidity/solidity_basic.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "K8S_DeepDive 的大纲"
+              "title": "solidity_basic 的大纲"
             }
           }
         ],
@@ -171,9 +171,9 @@
   },
   "active": "bc7fbd1a9fd646f6",
   "lastOpenFiles": [
-    "OpenSource/ZooKeeper_基础.md",
-    "OpenSource/K8S/K8S_DeepDive.md",
     "Solidity/Blockchain_Testnet_Faucet.md",
+    "OpenSource/K8S/K8S_DeepDive.md",
+    "OpenSource/ZooKeeper_基础.md",
     "Solidity/solidity_basic.md",
     "OpenSource/K8S/k8s_oidc.md",
     "Azure/Azure_Credential.md",
