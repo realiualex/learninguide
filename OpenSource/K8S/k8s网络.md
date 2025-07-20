@@ -14,8 +14,8 @@
 lsns -t cgroup
 lsns -t net // 或者 ip netns
 ```
-### network namespace初探
-#### 创建两个network namespace进行通信
+## network namespace初探
+### 创建两个network namespace进行通信
 在同一个linux宿主机上创建两个 network namespace，然后每一个network namespace里创建一个虚拟网卡，配置一个虚拟ip，模拟通信
 
 ```shell
@@ -68,7 +68,7 @@ ip netns delete ns1
 ip netns delete ns2
 ```
 
-#### 将两个network namespace里的网卡，与加宿主机 的veth peer，在veth peer里进行bridge进行通信
+### 将两个network namespace里的网卡，与加宿主机 的veth peer，在veth peer里进行bridge进行通信
 ```shell
 # 创建两个 network namespace
 ip netns add ns1
