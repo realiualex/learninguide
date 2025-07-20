@@ -129,3 +129,62 @@ sysctl -p
 # 注意：如果没有启用 bridge模块，可能看不到 /proc/sys/net/bridge/相关文件，可以用下面方法启用
 modprobe br_netfilter
 ```
+
+## flannel
+flannel 支持三种网络模式，vxlan, host-gw, vxlan+host-gw。宿主机上有一个 cni0的网桥，pod 和宿主机之间，有一个veth pair，宿主机上的veth 加入到 cni0上，从而让宿主机和 pod 里的ip产生了联系。当不同节点的2个pod之间通信的时候，pod通过自己的veth，将流量给宿主机veth，再给宿主机cni0，然后在 vxlan网络里，给另外一个节点cni0，再给另外一个节点的veth，再给pod内的veth，从而另外一个节点的pod能收到这个数据包。在这种模式下ping的话，通过TTL判断，能看出减少了2.
+如果是 host-gw 网络，那么就不是 vxlan了，是靠本机路由实现的。但需要网络环境支持这种路由（比如IDC，在云厂商就不行了）。为了让 vxlan 和 host-gw 结合起来，本机走 host gw，跨节点走vxlan，flannel也是支持这么配置的。
+
+## calico
+calico 和 flannel最大的不同，是没有了 cni0 网桥，pod 和宿主机还是有一对veth，宿主机上的veth，要开启 proxy arp 的功能，当pod去任意地址的时候，宿主机的 veth 都会响应，然后再通过路由的模式，找到目标地址的宿主机veth.
+
+### arp proxy 学习 
+```shell
+ip netns add ns1
+ip netns add ns2
+
+ip link add veth1 type veth peer name veth1-ns1
+ip link add veth2 type veth peer name veth2-ns2
+
+ip link set veth1-ns1 netns ns1
+ip link set veth2-ns2 netns ns2
+
+# 给ns1 和ns2里的网卡，设置ip地址
+ip netns exec ns1 ip addr add 192.168.100.1/32 dev veth1-ns1
+ip netns exec ns2 ip addr add 192.168.100.2/32 dev veth2-ns2
+
+ip netns exec ns1 ip link set veth1-ns1 up
+ip netns exec ns2 ip link set veth2-ns2 up
+
+# 在ns1 和 ns2 里，添加一个路由，这样当pod跟外部通信的时候，会通过 veth1-ns1网卡发到 169.254.1.1
+ip netns exec ns1 ip route add 169.254.1.1 dev veth1-ns1 scope link
+ip netns exec ns1 ip route add default via 169.254.1.1 dev veth1-ns1
+
+ip netns exec ns2 ip route add 169.254.1.1/32 dev veth2-ns2 scope link
+ip netns exec ns2 ip route add default via 169.254.1.1 dev veth2-ns2
+
+# 看下ns1 的路由表
+ip netns exec ns1 route -n
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         169.254.1.1     0.0.0.0         UG    0      0        0 veth1-ns1
+169.254.1.1     0.0.0.0         255.255.255.255 UH    0      0        0 veth1-ns1
+
+ip link set veth1 up
+ip link set veth2 up
+
+
+# 要在宿主机上设置路由，让给pod通信的时候，知道是哪个veth网卡
+ip route add 192.168.100.1/32 dev veth1
+ip route add 192.168.100.2/32 dev veth2
+
+# 在宿主机上，对 veth1 和veth2 网卡，开启proxy_arp
+echo 1 > /proc/sys/net/ipv4/conf/veth1/proxy_arp
+echo 1 > /proc/sys/net/ipv4/conf/veth2/proxy_arp
+
+# 开启ip_forward
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# 测试
+ip netns exec ns1 ping 192.168.100.2
+ 
+```
+
