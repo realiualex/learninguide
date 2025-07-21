@@ -263,7 +263,7 @@ https://getfoundry.sh/introduction/installation/
 ```
 
 下面的命令，是执行 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 合约里的 execute 方法，execute 支持3个参数，分别是 address, unit256, bytes，第一个address的值是 [0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4](https://sepolia.etherscan.io/address/0x08210f9170f89ab7658f0b5e3ff39b0e03c594d4#writeProxyContract)，这是一个ERC20代币合约地址，第二个 uint256为0，第三个 bytes的值是 cast calldata 的执行结果。cast calldata 后面的 transfer(address, uint256)，是0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4 这个合约里提供的方法
-```
+```shell
 cast send --gas-limit 1000000 --private-key xxx --rpc-url https://1rpc.io/sepolia 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 "execute (address,uint256,bytes)" 0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4 0 $(cast calldata "transfer(address,uint256)" 0xF79ef8dcebAd5cbA8E8Af563D46590498C50d7Bf 1)
 ```
 
@@ -300,6 +300,62 @@ cast send --gas-limit 1000000 --private-key xxx --rpc-url https://1rpc.io/sepoli
 ]
 ```
 
+同样我们也能看到，这个合约支持 executeBatch 的功能，从executeBatch 的ABI，我们能看出支持 的参数是 executeBatch((address,uint256,bytes)[])，那么我们的交易可以这样写
+```shell
+cast send --gas-limit 1000000 --private-key xxxx --rpc-url https://1rpc.io/sepolia 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 "executeBatch((address,uint256,bytes)[])" '[(0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4,0,0xa9059cbb000000000000000000000000f79ef8dcebAd5cbA8E8Af563D46590498C50d7Bf0000000000000000000000000000000000000000000000000000000000000001),(0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4,0,0xa9059cbb000000000000000000000000f79ef8dcebAd5cbA8E8Af563D46590498C50d7Bf0000000000000000000000000000000000000000000000000000000000000002)]'
+```
+
+我们也可以通过 abi-encode 命令，提前把abi hash结果拿到手，然后cast的时候直接把这个结果发出去
+```shell
+ABI_BUILD_RESULT=`cast abi-encode "executeBatch((address,uint256,bytes)[])" \
+'[(0x08210F9170F89Ab7658F0B5E3fF39b0E03C594D4,0,0xa9059cbb000000000000000000000000f79ef8dcebAd5cbA8E8Af563D46590498C50d7Bf0000000000000000000000000000000000000000000000000000000000000001)]'`
+
+cast send --gas-limit 1000000 --private-key xxxx --rpc-url https://1rpc.io/sepolia 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 $ABI_BUILD_RESULT
+```
+
+
+executeBatch 的 ABI 结构
+```json
+ {
+        "inputs":
+        [
+            {
+                "components":
+                [
+                    {
+                        "internalType": "address",
+                        "name": "target",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "data",
+                        "type": "bytes"
+                    }
+                ],
+                "internalType": "struct Call[]",
+                "name": "calls",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "executeBatch",
+        "outputs":
+        [
+            {
+                "internalType": "bytes[]",
+                "name": "returnData",
+                "type": "bytes[]"
+            }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+    }
+```
 
 ## 故障排查
 
@@ -315,6 +371,7 @@ https://dashboard.tenderly.co/
 https://sepolia.etherscan.io/tx/0x3fa7fcbd2e24b32bf952792a2e082f25cf66024f39c4fd76e629a3afc5d0a09e
 
 但在上面的tenderly.co工具里，可以输入tx id进行查询，就能很清楚的看到执行哪个合约文件的哪个方法报错了，在这里还可以直接 看合约内容，并提供了搜索功能。能很方便debug.
+
 
 
 ## 参考资料 
