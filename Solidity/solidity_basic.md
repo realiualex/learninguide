@@ -313,6 +313,8 @@ ABI_BUILD_RESULT=`cast abi-encode "executeBatch((address,uint256,bytes)[])" \
 cast send --gas-limit 1000000 --private-key xxxx --rpc-url https://1rpc.io/sepolia 0xc9934593a3e435bE4d4eD43D124fe84fAEd76992 $ABI_BUILD_RESULT
 ```
 
+有关ABI encode的结果，加上合约的方法名，就是区块链浏览器里看到的原始的input
+
 
 executeBatch 的 ABI 结构
 ```json
