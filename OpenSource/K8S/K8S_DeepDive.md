@@ -276,3 +276,30 @@ kubectl get --raw /
 在非常大的k8s集群中，当k8s集群里加入或移除较多的节点，假设节点上有比较多的daemonset，那么会有大量的pod创建或删除的事件，成千上万个 pod （进程）突然做同一件事情，k8s 控制平面会有很大的压力，甚至会引起集群雪崩。所以一般建议，对于 daemonset，使用 RollingUpdate 的更新策略，比如设置 `maxUnavailable: 1`，每次只会有 1 个节点的 Pod 被杀掉、重建，更新完成并恢复可用后才会轮到下一个节点。这样整个升级过程是**串行推进**的
 
 
+## k8s security
+在早期版本，k8s 可以通过 PodSecurityPolicy 来控制一些安全策略，如：是否能挂载宿主机 /proc 路径，是否能进入宿主机 其他进程的namespace，和宿主机共享network namespace等。但是策略设置太过于复杂，而且容易出错，甚至看起来策略很严格，实际却不生效。所以在 v1.25+开始，正式推出 PodSecurityAdmission 的功能，用来替代以前的 PodSecurityPolicy，在现在新版本的 k8s里，已经没有 PodSecurityPolicy 这个资源了。  
+* PodSecurityAdmission 的能力，是作用在 namespace上的，只需要在 namespace上，打特定的 label，就能控制这个namespace下的资源的策略，pod security admission 只支持 3 种[策略](https://kubernetes.io/docs/concepts/security/pod-security-standards/) (privileged, baseline, and restricted)，且不支持自定义细化策略。其中 privileged 是不做任何限制，pod拥有最宽泛的策略，但不安全。restricted 是严格的限制。restricted 的策略里，包含了所有 baseline 的策略。
+* PodSecurityAdmission 的mode，支持 enforce, audit 和 warn 三种模式。其中 enforce指的是，如果不符合策略，直接拒绝pod创建。audit 和warn 可以创建，但是audit 会在 k8s audit log里看到(用户侧看不到)，warn 在用户发起创建pod请求的返回的时候能看到（如 kubectl 返回值里看到）
+* 示例: 在 example 的 namespace 下， baseline 的策略，是强制执行的，违反了 baseline 就不能创建；对于 restricted 的策略，违反了能创建pod，但是会在audit log里显示  
+```shell
+kubectl label --overwrite ns example \
+  pod-security.kubernetes.io/enforce=baseline \
+  pod-security.kubernetes.io/enforce-version=latest \
+  pod-security.kubernetes.io/audit=restricted \
+  pod-security.kubernetes.io/audit-version=latest
+
+```
+
+* 一个错误的示例: 下面的例子是错误的，因为 restricted 的策略已经是 enforce了，违反restricted 的pod，都无法创建。而 restricted 的策略，包含了 baseline 的策略，因此 违反 baseline 策略的pod也无法创建，所以 audit=baseline 这个永远不会生效，即 k8s api server 的 audit log里，永远不会记录这个日志，所以是一个无效的策略.
+```
+kubectl label --overwrite ns example \
+  pod-security.kubernetes.io/audit=baseline \
+  pod-security.kubernetes.io/audit-version=latest \
+  pod-security.kubernetes.io/enforce=restricted \
+  pod-security.kubernetes.io/enforce-version=latest
+```
+
+**策略层级关系**
+restricted > baseline > privileged，严格程度递增，上一层全部包含下一层的所有规则。
+enforce 的级别>= audit 的级别时，audit 基本无效，因为前置检查已全部拦截。  
+

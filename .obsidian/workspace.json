@@ -13,13 +13,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Solidity/solidity_basic.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "solidity_basic"
+              "title": "K8S_DeepDive"
             }
           }
         ]
@@ -54,7 +54,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "oidc",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -141,13 +141,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Solidity/solidity_basic.md",
+                "file": "OpenSource/K8S/K8S_DeepDive.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "solidity_basic 的大纲"
+              "title": "K8S_DeepDive 的大纲"
             }
           }
         ],
@@ -171,8 +171,8 @@
   },
   "active": "bc7fbd1a9fd646f6",
   "lastOpenFiles": [
-    "Solidity/Blockchain_Testnet_Faucet.md",
     "Solidity/solidity_basic.md",
+    "Solidity/Blockchain_Testnet_Faucet.md",
     "OpenSource/K8S/k8s网络.md",
     "OpenSource/K8S/K8S_DeepDive.md",
     "OpenSource/ZooKeeper_基础.md",
