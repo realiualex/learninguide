@@ -116,9 +116,9 @@
   * [加密与签名](./Security/加密与签名.md)
   * [RSA](./Security/RSA.md)
   * [ECDSA](./Security/ECDSA.md)
-* Solidity
-  * [Solidity基础](./Solidity/solidity_basic.md)
-  * [Blockchain Testnet Faucet](./Solidity/Blockchain_Testnet_Faucet.md)
+* Web3
+  * [Solidity基础](./Web3/solidity_basic.md)
+  * [Blockchain Testnet Faucet](./Web3/Blockchain_Testnet_Faucet.md)
 * Tools
   * [视频处理ffmpeg ](./Tools/视频处理ffmpeg.md)
   * [IDE配置](./Tools/IDE配置.md)
