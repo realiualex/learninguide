@@ -565,3 +565,13 @@ if __name__ == "__main__":
     for result in executor.map(a, tasks):
         print(result)
 ```
+
+### multiprocessing 里的 fork vs spawn
+* fork 
+在 python 3.14 之前的版本，POSIX (Linux) 标准的系统，使用的是 fork 创建子进程，fork 在创建子进程的时候，会 copy 父进程的环境变量和状态信息（copy on write复制父进程的内存所有信息，在fork的时候还用同一块内存，当有写操作的时候才真正复制），也许子进程用不到，但是 fork 出子进程的时候会完全拷贝，这样性能不好，且容易出现安全问题。
+* spawn
+在 Windows 和 MacOS 系统上，python 用的是 spawn 创建出来子进程， spawn 在创建子进程的时候，启动的是一个全新的 python 解释器环境，这个环境在启动的时候，只会复制 run() 方法启动所需要的数据。spawn 启动比较慢
+* forksever
+从 3.14 开始，python 在 Linux系统上，弃用了 fork() 方法创建子进程，使用 forksever() 来创建，forkserver的原理是: 在 multiprocessing 第一次创建子进程的时候，先用 spawn() 创建一个 forkserver 进程，这个进程比较干净，然后再用 forkserver 进程通过 fork 方法创建子进程
+	* 从这里来看，如果 linux下的 python 程序要创建比较多的子进程，那么 forkserver 比较合适，能兼备 spawn 比较干净 和 fork 比较快的优势
+	*  但如果python 程序只创建1个子进程，那么其实使用 spawn 会更快( 少了 forkserver 的创建过程)
