@@ -119,6 +119,8 @@
 * Web3
   * [Solidity基础](./Web3/solidity_basic.md)
   * [Blockchain Testnet Faucet](./Web3/Blockchain_Testnet_Faucet.md)
+  * [Flow](./Web3/Flow.md)
+  * [blockchain_basic](./Web3/blockchain_basic.md)
 * Tools
   * [视频处理ffmpeg ](./Tools/视频处理ffmpeg.md)
   * [IDE配置](./Tools/IDE配置.md)
