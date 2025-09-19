@@ -7,3 +7,7 @@ Data Diode， 一根光纤，发送端的光纤，只能发射光子，接收端
 如果双方都要通信，那么一般是由两个网卡，两根 OWT 光纤实现的，并且 MDG 会对内容做过滤，协议识别，还有病毒查杀等功能集成在一起。 MDG 是非标准术语，一般也叫做 bi-dirctional 或 multi level CDS.
 
 
+## 厂商
+如 dataflowx 公司提供的 datadiodex，主要是 OWT 单向传输的产品
+https://www.dataflowx.com/datadiodex
+
