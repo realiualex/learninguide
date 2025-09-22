@@ -12,4 +12,7 @@ https://sepolia.etherscan.io/address/0x9ee0E0Dec640866D96cF93F0cD7388B61a0a9cBc
 
 // bsc testnet
 https://www.bnbchain.org/en/testnet-faucet
+
+// multiple chain faucet
+https://faucet.circle.com/
 ```
