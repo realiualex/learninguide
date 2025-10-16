@@ -21,24 +21,8 @@
               "icon": "lucide-file",
               "title": "SUMMARY"
             }
-          },
-          {
-            "id": "3e7e164c42991995",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Security/NitroTPM.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "NitroTPM"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -70,7 +54,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "ecdsa",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -95,7 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 226.5
+    "width": 327.5
   },
   "right": {
     "id": "59bd2d47a38ae4b9",
@@ -157,13 +141,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Security/NitroTPM.md",
+                "file": "SUMMARY.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "NitroTPM 的大纲"
+              "title": "SUMMARY 的大纲"
             }
           }
         ],
@@ -186,18 +170,22 @@
       "obsidian-kanban:创建新看板": false
     }
   },
-  "active": "3e7e164c42991995",
+  "active": "7e9be8ceff8839a3",
   "lastOpenFiles": [
+    "README.md",
+    "Security/NitroTPM 和 EC2 attestation.md",
     "SUMMARY.md",
-    "Security/NitroTPM.md",
+    "Web3/Blockchain_Testnet_Faucet.md",
+    "未命名 2.base",
+    "未命名 1.base",
+    "未命名.base",
+    "未命名看板.md",
     "Security/加密与签名.md",
     "Security/ECDSA.md",
     "Web3/blockchain_basic.md",
-    "Web3/Blockchain_Testnet_Faucet.md",
     "Web3/solidity_basic.md",
     "Web3/Flow.md",
     "Security/CDS.md",
-    "README.md",
     "Programming/Algorithm/树遍历.md",
     "Programming/Algorithm/返回list升序序列的最大长度.md",
     "OpenSource/正则.md",
@@ -212,8 +200,6 @@
     "OpenSource/ZooKeeper_基础.md",
     "OpenSource/K8S/k8s_oidc.md",
     "Azure/Azure_Credential.md",
-    "OpenSource/VictoriaMetrics.md",
-    "OpenSource/SSH_Tunnel_上网.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
