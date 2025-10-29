@@ -96,6 +96,11 @@ set -g @continuum-save-interval '15'
 set -g @continuum-restore 'on'
 set -g @resurrect-capture-pane-contents 'on'
 
+set -g mode-keys vi # 在复制模式里，不用 emac 语法，用vi语法，这样翻页和滚屏比较一致
+set -g prefix M-a
+unbind C-b
+bind M-a send-prefix # 将控制键，从 Ctrl +b 改成了option + a (ctrl + b 给改成了 raycast 的启动键)。注意在 iterm2 里，settings --> profile --> keys，Left Option key 要从 Normal 改成 Esc+，否则 option+a 在终端里打出的是特殊字符
+
 run -b '~/.tmux/plugins/tpm/tpm'
 
 #set -g mouse on
