@@ -55,6 +55,7 @@
     * [CRD开发](OpenSource/K8S/CRD开发.md)
     * [k8s网络](./OpenSource/K8S/k8s网络.md)
     * [k8s_finalizer](./OpenSource/K8S/k8s_finalizer.md)
+    * [AWS_EKS](./OpenSource/K8S/AWS_EKS)
   * [Cloud_Custodian](./OpenSource/compliance/Cloud_Custodian.md)
   * [Jenkins Basic](OpenSource/Jenkins_Basic.md)
   * [Nginx](./OpenSource/Nginx/Nginx配置.md)
