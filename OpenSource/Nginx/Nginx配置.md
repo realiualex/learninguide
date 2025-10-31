@@ -1,4 +1,3 @@
-# Nginx 配置
 
 ## Nginx 转发规则
 
