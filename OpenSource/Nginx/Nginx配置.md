@@ -204,3 +204,23 @@ server {
     }
 ```
 
+
+## nginx ip 限制
+在启用了 ip 限制模块的情况下，我们可以在 location 里用 `allow` 和 `deny` 的关键字，对访问 nginx 的ip做限制，但有时候用户的请求并不是直接访问到 nginx，用户也是经过层层代理访问过来，此时我们可以看用户最原始的ip，是否在 x-forwarded-for 的header里，如果在，我们就可以将这个ip取出来 (即修改 remote_addr为这个 x-forwarded-for 的 ip)，然后再用 `allow` 或 `deny` 控制
+
+有两个地方要配置，在 http block 里要设置用户的真实ip来源于哪个网段，这里也可以设置为 `0.0.0.0/0`。在 location block里，设置真正的白名单，比如只允许 10.111，禁止其他的.
+```
+http {
+    real_ip_header X-Forwarded-For;
+    set_real_ip_from 10.111.0.0/16;     # 用户真实的ip来源于哪里
+    real_ip_recursive on;
+}
+
+location /api/v1/ {
+  set $backend my.server.com;
+  proxy_pass http://$backend;
+  allow 10.111.0.0/16;
+  deny all;
+}
+        
+```
