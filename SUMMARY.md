@@ -32,8 +32,6 @@
   * [RPC与REST](OpenSource/gRPC/RPC与REST.md)
   * [使用Python申请大量内存测试](OpenSource/使用python申请大量内存测试.md)
   * [使用TPC_DS产生压测数据](./OpenSource/使用TPC_DS产生压测数据.md)
-  * Superset
-    * [Superset部署手册](Superset/Superset部署手册.md)
   * [代码扫描](./OpenSource/代码扫描.md)
   * Git
     * [Git Basic](OpenSource/Git_Basic.md)
@@ -134,3 +132,5 @@
   * [密码管理](./Tools/密码管理.md)
   * [FRP配置](./Tools/FRP配置.md)
   *  [工具集](./Tools/工具集.md)
+  * [系统设计](./Tools/系统设计.md)
+  * 

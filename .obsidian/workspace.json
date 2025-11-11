@@ -23,33 +23,18 @@
             }
           },
           {
-            "id": "f887101b133d97ad",
+            "id": "2ed332d7d37e6d90",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/neovim.md",
+                "file": "Tools/系统设计.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "neovim"
-            }
-          },
-          {
-            "id": "0f6638b46b4115b9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "OpenSource/K8S/AWS_EKS.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": false
-              },
-              "icon": "lucide-file",
-              "title": "AWS_EKS"
+              "title": "系统设计"
             }
           }
         ],
@@ -106,8 +91,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -173,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux/neovim.md",
+                "file": "Tools/系统设计.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "neovim 的大纲"
+              "title": "系统设计 的大纲"
             }
           }
         ],
@@ -202,14 +186,18 @@
       "obsidian-kanban:创建新看板": false
     }
   },
-  "active": "f887101b133d97ad",
+  "active": "2ed332d7d37e6d90",
   "lastOpenFiles": [
+    "SUMMARY.md",
+    "Tools/系统设计.md",
+    "Math/多项式插值法.md",
+    "OpenSource/代码扫描.md",
+    "Linux/neovim.md",
+    "Superset/Superset部署手册.md",
     "OpenSource/Nginx/Nginx配置.md",
     "Azure/AKS_Basic.md",
     "OpenSource/K8S/AWS_EKS.md",
-    "SUMMARY.md",
     "README.md",
-    "Linux/neovim.md",
     "OpenSource/K8S/k8s_finalizer.md",
     "OpenSource/K8S/K8S_DeepDive.md",
     "Linux/tmux和screen.md",
@@ -229,10 +217,6 @@
     "Programming/Algorithm/树遍历.md",
     "Programming/Algorithm/返回list升序序列的最大长度.md",
     "OpenSource/正则.md",
-    "Security/TLS.md",
-    "Security/SSL证书.md",
-    "Security/RSA.md",
-    "Security/HTTP常见攻击.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
