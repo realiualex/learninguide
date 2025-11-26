@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Tools/系统设计.md",
+                "file": "Security/加密与签名.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "系统设计"
+              "title": "加密与签名"
             }
           }
         ],
@@ -157,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Tools/系统设计.md",
+                "file": "Security/加密与签名.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "系统设计 的大纲"
+              "title": "加密与签名 的大纲"
             }
           }
         ],
@@ -188,8 +188,16 @@
   },
   "active": "2ed332d7d37e6d90",
   "lastOpenFiles": [
-    "SUMMARY.md",
+    "Security/TLS.md",
+    "Security/SSL证书.md",
+    "Security/RSA.md",
+    "Security/NitroTPM 和 EC2 attestation.md",
+    "Security/HTTP常见攻击.md",
+    "Security/ECDSA.md",
+    "Security/CDS.md",
+    "Security/加密与签名.md",
     "Tools/系统设计.md",
+    "SUMMARY.md",
     "Math/多项式插值法.md",
     "OpenSource/代码扫描.md",
     "Linux/neovim.md",
@@ -202,21 +210,13 @@
     "OpenSource/K8S/K8S_DeepDive.md",
     "Linux/tmux和screen.md",
     "OpenSource/Kafka/Kafka基础.md",
-    "Security/NitroTPM 和 EC2 attestation.md",
     "Web3/Blockchain_Testnet_Faucet.md",
     "未命名 2.base",
     "未命名 1.base",
     "未命名.base",
     "未命名看板.md",
-    "Security/加密与签名.md",
-    "Security/ECDSA.md",
     "Web3/blockchain_basic.md",
     "Web3/solidity_basic.md",
-    "Web3/Flow.md",
-    "Security/CDS.md",
-    "Programming/Algorithm/树遍历.md",
-    "Programming/Algorithm/返回list升序序列的最大长度.md",
-    "OpenSource/正则.md",
     "Web/Html_Css.assets/image-20210805234045863.png",
     "Excalidraw",
     "Tools/assets/Untitled.assets/image-20230625105922390.png",
