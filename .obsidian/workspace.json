@@ -28,13 +28,13 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Security/加密与签名.md",
+                "file": "Linux/tmux和screen.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": false
               },
               "icon": "lucide-file",
-              "title": "加密与签名"
+              "title": "tmux和screen"
             }
           }
         ],
@@ -70,7 +70,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "neovim",
+                "query": "tmux",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -78,7 +78,7 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "搜索"
+              "title": "Search"
             }
           },
           {
@@ -91,7 +91,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -157,13 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Security/加密与签名.md",
+                "file": "Linux/tmux和screen.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 加密与签名"
+              "title": "Outline of tmux和screen"
             }
           }
         ],
@@ -188,6 +189,7 @@
   },
   "active": "2ed332d7d37e6d90",
   "lastOpenFiles": [
+    "Security/加密与签名.md",
     "Security/TLS.md",
     "Security/SSL证书.md",
     "Security/RSA.md",
@@ -195,7 +197,6 @@
     "Security/HTTP常见攻击.md",
     "Security/ECDSA.md",
     "Security/CDS.md",
-    "Security/加密与签名.md",
     "Tools/系统设计.md",
     "SUMMARY.md",
     "Math/多项式插值法.md",

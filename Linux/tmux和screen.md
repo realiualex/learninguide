@@ -114,7 +114,7 @@ run -b '~/.tmux/plugins/tpm/tpm'
 ### 主题
 
 * 首先安装Powerline fonts[字体](https://github.com/powerline/fonts)
-* 在 Item2 中，选择Profile --> Text --> Font中选择 Noto Mono for Powerline
+* 在 Item2 中，选择Profile --> Text --> Font中选择 Noto Mono for Powerline。对于非ASCII，可以使用[NERD字体](https://github.com/ryanoasis/nerd-fonts)
 * 之后可以安装其他主题，比如 dracula tmux，或者 nordtheme/tmux
 
 ### 会话保存
