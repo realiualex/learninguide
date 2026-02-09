@@ -66,7 +66,7 @@
 
 * Linux
   * [SSH Tunnel 上网](OpenSource/SSH_Tunnel_上网.md)
-  * [内存管理](OpenSource/内存管理.md)
+  * [CPU内存管理](./OpenSource/CPU内存管理.md)
   * [在Linux系统中通过LUKS加密磁盘](OpenSource/在Linux系统中通过LUKS加密磁盘.md)
   * [量子计算 Basic](OpenSource/量子计算_Basic.md)
   * [IO多路复用](./Linux/IO多路复用.md)

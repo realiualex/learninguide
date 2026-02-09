@@ -1,3 +1,27 @@
+## 运算符优先级
+`in` 的优先级，高于 `or`，比如下面的这个语句，永远会打印出来 `xx`
+```python
+if "BB" or "CC" in ["AA"]:
+	print("xx")
+```
+
+原因是上述等于
+```python
+if bool("BB") or bool("CC" in ["AA"])
+```
+
+为了严谨，要这么写
+```python
+if "BB" in ["AA"] or "CC" in ["AA"]
+```
+如果判断的条件比较多，可以这么写
+
+```python
+list1=["AA"]
+list2=["BB", "CC"]
+if any([x for x in list2 if x in list1]):
+
+```
 ## 初始化参数的可变对象
 
 在定义一个方法的时候，如果给了默认参数，默认参数的数据类型是一个可变类型，一定要小心。因为python会将这个参数的值保存下来，在另外一次调用的时候与其赋值
